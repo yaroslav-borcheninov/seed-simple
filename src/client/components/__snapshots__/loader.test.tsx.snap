@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Loader after 999ms should render nothing 1`] = `""`;
+
+exports[`Loader after 1001ms should render 1`] = `
+<div>
+  Loading...
+</div>
+`;
+
+exports[`Loader when mounted should render nothing 1`] = `""`;

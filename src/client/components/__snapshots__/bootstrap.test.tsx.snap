@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Bootstrap initially should render nothing 1`] = `""`;
+
+exports[`Bootstrap when fetch throws should render Error 1`] = `<Error />`;
+
+exports[`Bootstrap when mounted should render Loader 1`] = `<Loader />`;
+
+exports[`Bootstrap when response is 2xx should render props.children 1`] = `
+<div>
+  Test: 
+  123
+</div>
+`;
+
+exports[`Bootstrap when response is not 2xx should render Error 1`] = `<Error />`;
