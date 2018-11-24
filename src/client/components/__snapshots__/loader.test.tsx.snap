@@ -3,9 +3,9 @@
 exports[`Loader after 999ms should render nothing 1`] = `""`;
 
 exports[`Loader after 1001ms should render 1`] = `
-<div>
+<styled.div>
   Loading...
-</div>
+</styled.div>
 `;
 
 exports[`Loader when mounted should render nothing 1`] = `""`;

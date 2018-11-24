@@ -1,7 +1,8 @@
 import React from "react"
 
+import { Center } from "../styled"
 import Strings from "../../shared/strings"
 
-const NotFound = () => <div>{Strings["common.not-found"]}</div>
+const NotFound = () => <Center>{Strings["common.not-found"]}</Center>
 
 export default NotFound
