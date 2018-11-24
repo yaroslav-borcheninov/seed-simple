@@ -2,8 +2,6 @@ import React from "react"
 
 import Strings from "../../shared/strings"
 
-// const Loader = () => <div>{Strings["common.loading"]}</div>
-
 type State = {
   show: boolean
 }
