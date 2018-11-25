@@ -1,5 +1,6 @@
 import React from "react"
 
+import { Center } from "../styled"
 import Strings from "../../shared/strings"
 
 type State = {
@@ -26,7 +27,9 @@ class Loader extends React.Component {
   }
 
   render() {
-    return !this.state.show ? null : <div>{Strings["common.loading"]}</div>
+    return !this.state.show ? null : (
+      <Center>{Strings["common.loading"]}</Center>
+    )
   }
 }
 

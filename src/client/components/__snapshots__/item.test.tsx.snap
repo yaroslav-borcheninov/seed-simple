@@ -1,9 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Item should render data 1`] = `
-<div>
-  123
-  : 
-  item 123
-</div>
+<React.Fragment>
+  <ForwardRef>
+    Items
+  </ForwardRef>
+  <div>
+    123
+    : 
+    item 123
+  </div>
+</React.Fragment>
 `;

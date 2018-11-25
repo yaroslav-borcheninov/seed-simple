@@ -2,29 +2,31 @@
 
 exports[`App should render 1`] = `
 <React.Fragment>
-  <BrowserRouter>
-    <Switch>
-      <Redirect
-        exact={true}
-        from="/"
-        push={false}
-        to="items"
-      />
-      <Route
-        component={[Function]}
-        exact={true}
-        path="/items"
-      />
-      <Route
-        component={[Function]}
-        exact={true}
-        path="/items/:id"
-      />
-      <Route
-        component={[Function]}
-      />
-    </Switch>
-  </BrowserRouter>
+  <ForwardRef>
+    <BrowserRouter>
+      <Switch>
+        <Redirect
+          exact={true}
+          from="/"
+          push={false}
+          to="items"
+        />
+        <Route
+          component={[Function]}
+          exact={true}
+          path="/items"
+        />
+        <Route
+          component={[Function]}
+          exact={true}
+          path="/items/:id"
+        />
+        <Route
+          component={[Function]}
+        />
+      </Switch>
+    </BrowserRouter>
+  </ForwardRef>
   <GlobalStyleComponent
     suppressMultiMountWarning={false}
   />
