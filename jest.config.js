@@ -3,6 +3,6 @@ module.exports = {
   clearMocks: true,
   collectCoverage: true,
   collectCoverageFrom: ["src/**/*.{ts,tsx}"],
-  setupTestFrameworkScriptFile: "./enzyme.config.js",
+  setupFiles: ["./enzyme.config.js"],
   snapshotSerializers: ["enzyme-to-json/serializer"],
 }
