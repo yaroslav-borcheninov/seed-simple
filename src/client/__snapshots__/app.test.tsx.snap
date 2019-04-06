@@ -8,7 +8,6 @@ exports[`App should render 1`] = `
         <Redirect
           exact={true}
           from="/"
-          push={false}
           to="items"
         />
         <Route
@@ -27,8 +26,6 @@ exports[`App should render 1`] = `
       </Switch>
     </BrowserRouter>
   </ForwardRef>
-  <GlobalStyleComponent
-    suppressMultiMountWarning={false}
-  />
+  <GlobalStyleComponent />
 </React.Fragment>
 `;
