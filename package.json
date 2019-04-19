@@ -9,7 +9,9 @@
     "serve:dev": "ts-node-dev --no-deps --respawn --no-notify ./src/server",
     "tslint": "tslint --project ./",
     "prettier": "prettier --list-different '**/*.{ts,tsx,js,json}'",
-    "test": "yarn prettier && yarn tslint && jest"
+    "jest": "jest",
+    "jest:ci": "jest --coverageReporters=text-lcov | coveralls",
+    "test": "yarn prettier && yarn tslint && yarn jest${CI:+:ci}"
   },
   "devDependencies": {
     "@babel/core": "^7.4.3",
