@@ -1,25 +1,24 @@
 import React from "react"
-import { shallow, ShallowWrapper } from "enzyme"
+import { LinkProps } from "react-router-dom"
+import { render, RenderResult } from "react-testing-library"
 
-import Bootstrap from "./bootstrap"
 import Items from "./items"
 
-jest.mock("./bootstrap", () => () => null)
+jest.mock("react-router-dom", () => ({
+  Link: ({ to, children }: LinkProps) =>
+    `[Link to="${to}" children="${children}"]`,
+}))
 
 describe("Items", () => {
-  let component: ShallowWrapper
+  let RealFetch: GlobalFetch["fetch"]
+  let MockFetch: jest.Mock
+  let renderResult: RenderResult
 
   beforeEach(() => {
-    component = shallow(<Items />)
-  })
-
-  it("should pass url to Bootstrap", () => {
-    expect(component.find(Bootstrap).prop("url")).toEqual("/api/items")
-  })
-
-  it("should render data", () => {
-    expect(
-      component.find(Bootstrap).prop("children")([
+    RealFetch = window.fetch
+    MockFetch = jest.fn().mockReturnValue({
+      ok: true,
+      json: () => [
         {
           id: "123",
           title: "item 123",
@@ -28,7 +27,22 @@ describe("Items", () => {
           id: "321",
           title: "item 321",
         },
-      ])
-    ).toMatchSnapshot()
+      ],
+    })
+    window.fetch = MockFetch
+
+    renderResult = render(<Items />)
+  })
+
+  afterEach(() => {
+    window.fetch = RealFetch
+  })
+
+  it("should call fetch", () => {
+    expect(MockFetch).toHaveBeenCalledWith("/api/items")
+  })
+
+  it("should render data", () => {
+    expect(renderResult.container).toMatchSnapshot()
   })
 })

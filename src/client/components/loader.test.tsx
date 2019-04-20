@@ -1,64 +1,58 @@
 import React from "react"
-import { shallow, ShallowWrapper } from "enzyme"
+import { render, RenderResult } from "react-testing-library"
 
 import Loader from "./loader"
 
 jest.useFakeTimers()
 
 describe("Loader", () => {
-  const getComponent = () => shallow<Loader>(<Loader />)
-  let component: ShallowWrapper<{}, {}, Loader>
+  const renderComponent = () => render(<Loader />)
+  let renderResult: RenderResult
 
   describe("when mounted", () => {
     beforeEach(() => {
-      component = getComponent()
+      renderResult = renderComponent()
     })
 
     it("should render nothing", () => {
-      expect(component).toMatchSnapshot()
+      expect(renderResult.container).toMatchSnapshot()
     })
 
     it("should call setTimeout", () => {
-      expect(window.setTimeout).toHaveBeenCalledWith(
-        component.instance().showLoader,
-        1000
-      )
+      expect(window.setTimeout).toHaveBeenCalledWith(expect.any(Function), 1000)
     })
   })
 
   describe("after 999ms", () => {
     beforeEach(() => {
-      component = getComponent()
+      renderResult = renderComponent()
       jest.advanceTimersByTime(999)
     })
 
     it("should render nothing", () => {
-      expect(component).toMatchSnapshot()
+      expect(renderResult.container).toMatchSnapshot()
     })
   })
 
   describe("after 1001ms", () => {
     beforeEach(() => {
-      component = getComponent()
+      renderResult = renderComponent()
       jest.advanceTimersByTime(1001)
     })
 
     it("should render", () => {
-      expect(component).toMatchSnapshot()
+      expect(renderResult.container).toMatchSnapshot()
     })
   })
 
   describe("when unmounted", () => {
-    let instance: Loader
-
     beforeEach(() => {
-      component = getComponent()
-      instance = component.instance()
-      component.unmount()
+      renderResult = renderComponent()
+      renderResult.unmount()
     })
 
     it("should call clearTimeout", () => {
-      expect(window.clearTimeout).toHaveBeenCalledWith(instance.timeoutId)
+      expect(window.clearTimeout).toHaveBeenCalledWith(expect.any(Number))
     })
   })
 })

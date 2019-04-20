@@ -1,7 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Error should render 1`] = `
-<styled.div>
-  Error...
-</styled.div>
+<div>
+  <div
+    class="sc-bwzfXH eQJZQL"
+  >
+    Error...
+  </div>
+</div>
 `;

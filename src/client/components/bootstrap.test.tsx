@@ -1,31 +1,25 @@
 import React from "react"
-import { shallow, ShallowWrapper } from "enzyme"
+import { render, RenderResult } from "react-testing-library"
 
-import Bootstrap, {
-  Props as BootstrapProps,
-  State as BootstrapState,
-} from "./bootstrap"
+import Bootstrap from "./bootstrap"
+
+jest.mock("./loader", () => () => "[Loader]")
+jest.mock("./error", () => () => "[Error]")
 
 describe("Bootstrap", () => {
   const props = {
     url: "/test/123",
-    children: jest.fn(data => <div>Test: {data}</div>),
+    children: jest.fn(data => `Test: ${data}`),
   }
-  const getComponent = ({ disableLifecycleMethods = false } = {}) =>
-    shallow<Bootstrap<string>>(<Bootstrap<string> {...props} />, {
-      disableLifecycleMethods,
-    })
+  const renderComponent = () => render(<Bootstrap<string> {...props} />)
 
-  let component: ShallowWrapper<
-    BootstrapProps<string>,
-    BootstrapState<string>,
-    Bootstrap<string>
-  >
   let RealFetch: GlobalFetch["fetch"]
   let MockFetch: jest.Mock
+  let safeSetStateSpy: jest.SpyInstance
+  let renderResult: RenderResult
 
   beforeEach(() => {
-    jest.spyOn(Bootstrap.prototype, "safeSetState")
+    safeSetStateSpy = jest.spyOn(Bootstrap.prototype, "safeSetState")
     RealFetch = window.fetch
     MockFetch = jest.fn()
     window.fetch = MockFetch
@@ -35,26 +29,16 @@ describe("Bootstrap", () => {
     window.fetch = RealFetch
   })
 
-  describe("initially", () => {
-    it("should render nothing", () => {
-      expect(getComponent({ disableLifecycleMethods: true })).toMatchSnapshot()
-    })
-  })
-
   describe("when mounted", () => {
     beforeEach(() => {
       // tslint:disable-next-line:no-empty
       const executor = () => {}
       MockFetch.mockReturnValue(new Promise(executor))
-      component = getComponent()
-    })
-
-    it("should set mounted flag", () => {
-      expect(component.instance().mounted).toEqual(true)
+      renderResult = renderComponent()
     })
 
     it("should call safeSetState", () => {
-      expect(component.instance().safeSetState).toHaveBeenCalledWith({
+      expect(safeSetStateSpy).toHaveBeenCalledWith({
         loading: true,
         error: false,
         data: null,
@@ -62,7 +46,7 @@ describe("Bootstrap", () => {
     })
 
     it("should render Loader", () => {
-      expect(component).toMatchSnapshot()
+      expect(renderResult.container).toMatchSnapshot()
     })
 
     it("should call fetch", () => {
@@ -75,11 +59,11 @@ describe("Bootstrap", () => {
       MockFetch.mockImplementation(() => {
         throw new Error()
       })
-      component = getComponent()
+      renderResult = renderComponent()
     })
 
     it("should call safeSetState", () => {
-      expect(component.instance().safeSetState).toHaveBeenCalledWith({
+      expect(safeSetStateSpy).toHaveBeenCalledWith({
         loading: false,
         error: true,
         data: null,
@@ -87,18 +71,18 @@ describe("Bootstrap", () => {
     })
 
     it("should render Error", () => {
-      expect(component).toMatchSnapshot()
+      expect(renderResult.container).toMatchSnapshot()
     })
   })
 
   describe("when response is not 2xx", () => {
     beforeEach(() => {
       MockFetch.mockReturnValue(Promise.resolve({ ok: false }))
-      component = getComponent()
+      renderResult = renderComponent()
     })
 
     it("should call safeSetState", () => {
-      expect(component.instance().safeSetState).toHaveBeenCalledWith({
+      expect(safeSetStateSpy).toHaveBeenCalledWith({
         loading: false,
         error: true,
         data: null,
@@ -106,7 +90,7 @@ describe("Bootstrap", () => {
     })
 
     it("should render Error", () => {
-      expect(component).toMatchSnapshot()
+      expect(renderResult.container).toMatchSnapshot()
     })
   })
 
@@ -115,11 +99,11 @@ describe("Bootstrap", () => {
       MockFetch.mockReturnValue(
         Promise.resolve({ ok: true, json: () => "123" })
       )
-      component = getComponent()
+      renderResult = renderComponent()
     })
 
     it("should call safeSetState", () => {
-      expect(component.instance().safeSetState).toHaveBeenCalledWith({
+      expect(safeSetStateSpy).toHaveBeenCalledWith({
         loading: false,
         error: false,
         data: "123",
@@ -131,63 +115,47 @@ describe("Bootstrap", () => {
     })
 
     it("should render props.children", () => {
-      expect(component).toMatchSnapshot()
+      expect(renderResult.container).toMatchSnapshot()
+    })
+  })
+
+  describe("when response is empty", () => {
+    beforeEach(() => {
+      MockFetch.mockReturnValue(Promise.resolve({ ok: true, json: () => null }))
+      renderResult = renderComponent()
+    })
+
+    it("should call safeSetState", () => {
+      expect(safeSetStateSpy).toHaveBeenCalledWith({
+        loading: false,
+        error: false,
+        data: null,
+      })
+    })
+
+    it("should render nothing", () => {
+      expect(renderResult.container).toMatchSnapshot()
     })
   })
 
   describe("when unmounted", () => {
-    let instance: Bootstrap<string>
-
-    beforeEach(() => {
-      // tslint:disable-next-line:no-empty
-      const executor = () => {}
-      MockFetch.mockReturnValue(new Promise(executor))
-      component = getComponent()
-      instance = component.instance()
-      component.unmount()
+    beforeEach(async () => {
+      const fetchPromise = Promise.resolve({
+        ok: true,
+        json: () =>
+          new Promise(resolve => {
+            setTimeout(() => resolve("123"), 0)
+          }),
+      })
+      MockFetch.mockReturnValue(fetchPromise)
+      renderResult = renderComponent()
+      safeSetStateSpy.mockClear()
+      renderResult.unmount()
+      await fetchPromise
     })
 
-    it("should unset mounted flag", () => {
-      expect(instance.mounted).toEqual(false)
-    })
-  })
-
-  describe("methods", () => {
-    describe("safeSetState", () => {
-      const state = {
-        loading: true,
-        error: true,
-        data: "123",
-      }
-      let setStateSpy: jest.SpyInstance
-      let instance: Bootstrap<string>
-
-      beforeEach(() => {
-        setStateSpy = jest.spyOn(Bootstrap.prototype, "setState")
-        instance = getComponent({ disableLifecycleMethods: true }).instance()
-      })
-
-      describe("when mounted", () => {
-        beforeEach(() => {
-          instance.mounted = true
-          instance.safeSetState(state)
-        })
-
-        it("should call setState", () => {
-          expect(setStateSpy).toHaveBeenCalledWith(state)
-        })
-      })
-
-      describe("when not mounted", () => {
-        beforeEach(() => {
-          instance.mounted = false
-          instance.safeSetState(state)
-        })
-
-        it("should call setState", () => {
-          expect(setStateSpy).not.toHaveBeenCalled()
-        })
-      })
+    it("should not call safeSetState", () => {
+      expect(safeSetStateSpy).not.toHaveBeenCalled()
     })
   })
 })

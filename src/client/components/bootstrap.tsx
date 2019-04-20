@@ -3,12 +3,12 @@ import React from "react"
 import Loader from "./loader"
 import Error from "./error"
 
-export type Props<T> = {
+type Props<T> = {
   url: string
   children(props: T): React.ReactNode
 }
 
-export type State<T> = {
+type State<T> = {
   loading: boolean
   error: boolean
   data: T | null

@@ -1,7 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`NotFound should render 1`] = `
-<styled.div>
-  Not found...
-</styled.div>
+<div>
+  <div
+    class="sc-bwzfXH eQJZQL"
+  >
+    Not found...
+  </div>
+</div>
 `;

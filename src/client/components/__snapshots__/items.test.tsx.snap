@@ -1,25 +1,19 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Items should render data 1`] = `
-<React.Fragment>
-  <ForwardRef>
+<div>
+  <h1
+    class="sc-htpNat dpfqCK"
+  >
     Items
-  </ForwardRef>
+  </h1>
   <ul>
     <li>
-      <Link
-        to="/items/123"
-      >
-        item 123
-      </Link>
+      [Link to="/items/123" children="item 123"]
     </li>
     <li>
-      <Link
-        to="/items/321"
-      >
-        item 321
-      </Link>
+      [Link to="/items/321" children="item 321"]
     </li>
   </ul>
-</React.Fragment>
+</div>
 `;
