@@ -3,6 +3,5 @@ module.exports = {
   clearMocks: true,
   collectCoverage: true,
   collectCoverageFrom: ["src/**/*.{ts,tsx}"],
-  setupFiles: ["./enzyme.config.js"],
-  snapshotSerializers: ["enzyme-to-json/serializer"],
+  setupFilesAfterEnv: ["react-testing-library/cleanup-after-each"],
 }

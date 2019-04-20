@@ -14,7 +14,7 @@ const Item = ({ match }: RouteComponentProps<Props>) => (
   <Bootstrap<ItemModel> url={`/api/items/${match.params.id}`}>
     {item => (
       <React.Fragment>
-        <H1>{Strings["items.title"]}</H1>
+        <H1>{Strings["item.title"]}</H1>
         <div>
           {item.id}: {item.title}
         </div>
