@@ -3,5 +3,8 @@ module.exports = {
   clearMocks: true,
   collectCoverage: true,
   collectCoverageFrom: ["src/**/*.{ts,tsx}"],
-  setupFilesAfterEnv: ["react-testing-library/cleanup-after-each"],
+  setupFilesAfterEnv: [
+    "react-testing-library/cleanup-after-each",
+    "./setupTests",
+  ],
 }

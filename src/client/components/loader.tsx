@@ -1,36 +1,20 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 
 import { Center } from "../styled"
 import Strings from "../../shared/strings"
 
-type State = {
-  show: boolean
-}
+const Loader = () => {
+  const [show, setShow] = useState(false)
 
-class Loader extends React.Component {
-  timeoutId?: number
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => setShow(true), 1000)
 
-  state: State = {
-    show: false,
-  }
+    return () => {
+      window.clearTimeout(timeoutId)
+    }
+  }, [])
 
-  showLoader = () => {
-    this.setState({ show: true })
-  }
-
-  componentDidMount() {
-    this.timeoutId = window.setTimeout(this.showLoader, 1000)
-  }
-
-  componentWillUnmount() {
-    window.clearTimeout(this.timeoutId)
-  }
-
-  render() {
-    return !this.state.show ? null : (
-      <Center>{Strings["common.loading"]}</Center>
-    )
-  }
+  return !show ? null : <Center>{Strings["common.loading"]}</Center>
 }
 
 export default Loader

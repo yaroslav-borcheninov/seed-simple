@@ -11,15 +11,13 @@ describe("Bootstrap", () => {
     url: "/test/123",
     children: jest.fn(data => `Test: ${data}`),
   }
-  const renderComponent = () => render(<Bootstrap<string> {...props} />)
+  const renderComponent = () => render(<Bootstrap<string> {...props as any} />)
 
   let RealFetch: GlobalFetch["fetch"]
   let MockFetch: jest.Mock
-  let safeSetStateSpy: jest.SpyInstance
   let renderResult: RenderResult
 
   beforeEach(() => {
-    safeSetStateSpy = jest.spyOn(Bootstrap.prototype, "safeSetState")
     RealFetch = window.fetch
     MockFetch = jest.fn()
     window.fetch = MockFetch
@@ -35,14 +33,6 @@ describe("Bootstrap", () => {
       const executor = () => {}
       MockFetch.mockReturnValue(new Promise(executor))
       renderResult = renderComponent()
-    })
-
-    it("should call safeSetState", () => {
-      expect(safeSetStateSpy).toHaveBeenCalledWith({
-        loading: true,
-        error: false,
-        data: null,
-      })
     })
 
     it("should render Loader", () => {
@@ -62,14 +52,6 @@ describe("Bootstrap", () => {
       renderResult = renderComponent()
     })
 
-    it("should call safeSetState", () => {
-      expect(safeSetStateSpy).toHaveBeenCalledWith({
-        loading: false,
-        error: true,
-        data: null,
-      })
-    })
-
     it("should render Error", () => {
       expect(renderResult.container).toMatchSnapshot()
     })
@@ -79,14 +61,6 @@ describe("Bootstrap", () => {
     beforeEach(() => {
       MockFetch.mockReturnValue(Promise.resolve({ ok: false }))
       renderResult = renderComponent()
-    })
-
-    it("should call safeSetState", () => {
-      expect(safeSetStateSpy).toHaveBeenCalledWith({
-        loading: false,
-        error: true,
-        data: null,
-      })
     })
 
     it("should render Error", () => {
@@ -100,14 +74,6 @@ describe("Bootstrap", () => {
         Promise.resolve({ ok: true, json: () => "123" })
       )
       renderResult = renderComponent()
-    })
-
-    it("should call safeSetState", () => {
-      expect(safeSetStateSpy).toHaveBeenCalledWith({
-        loading: false,
-        error: false,
-        data: "123",
-      })
     })
 
     it("should call props.children", () => {
@@ -125,37 +91,8 @@ describe("Bootstrap", () => {
       renderResult = renderComponent()
     })
 
-    it("should call safeSetState", () => {
-      expect(safeSetStateSpy).toHaveBeenCalledWith({
-        loading: false,
-        error: false,
-        data: null,
-      })
-    })
-
     it("should render nothing", () => {
       expect(renderResult.container).toMatchSnapshot()
-    })
-  })
-
-  describe("when unmounted", () => {
-    beforeEach(async () => {
-      const fetchPromise = Promise.resolve({
-        ok: true,
-        json: () =>
-          new Promise(resolve => {
-            setTimeout(() => resolve("123"), 0)
-          }),
-      })
-      MockFetch.mockReturnValue(fetchPromise)
-      renderResult = renderComponent()
-      safeSetStateSpy.mockClear()
-      renderResult.unmount()
-      await fetchPromise
-    })
-
-    it("should not call safeSetState", () => {
-      expect(safeSetStateSpy).not.toHaveBeenCalled()
     })
   })
 })
