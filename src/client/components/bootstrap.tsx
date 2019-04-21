@@ -1,11 +1,11 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 
 import Loader from "./loader"
 import Error from "./error"
 
 type Props<T> = {
   url: string
-  children(props: T): React.ReactNode
+  children(props: T): React.ReactElement
 }
 
 type State<T> = {
@@ -14,79 +14,71 @@ type State<T> = {
   data: T | null
 }
 
-class Bootstrap<T> extends React.Component<Props<T>, State<T>> {
-  mounted: boolean = false
-
-  state: State<T> = {
+const useBootstrapState = <T extends {}>(url: string) => {
+  const [state, setState] = useState<State<T>>({
     loading: false,
     error: false,
     data: null,
-  }
+  })
 
-  setLoading = () => {
-    this.safeSetState({
+  const setLoading = () => {
+    setState({
       loading: true,
       error: false,
       data: null,
     })
   }
 
-  setData = (data: T) => {
-    this.safeSetState({
+  const setData = (data: T) => {
+    setState({
       loading: false,
       error: false,
       data,
     })
   }
 
-  setError = () => {
-    this.safeSetState({
+  const setError = () => {
+    setState({
       loading: false,
       error: true,
       data: null,
     })
   }
 
-  safeSetState(state: State<T>) {
-    if (!this.mounted) {
-      return
-    }
-    this.setState(state)
-  }
-
-  async componentDidMount() {
-    this.mounted = true
-    this.setLoading()
+  const fetchData = async () => {
+    setLoading()
 
     try {
-      const response = await fetch(this.props.url)
+      const response = await fetch(url)
 
       if (response.ok) {
         const data: T = await response.json()
-        this.setData(data)
+        setData(data)
       } else {
-        this.setError()
+        setError()
       }
-    } catch (_) {
-      this.setError()
+    } catch {
+      setError()
     }
   }
 
-  componentWillUnmount() {
-    this.mounted = false
-  }
+  useEffect(() => {
+    fetchData()
+  }, [])
 
-  render() {
-    const { loading, error, data } = this.state
+  return state
+}
 
-    return loading ? (
-      <Loader />
-    ) : error ? (
-      <Error />
-    ) : !data ? null : (
-      this.props.children(data)
-    )
-  }
+const Bootstrap = <T extends {}>(props: Props<T>) => {
+  const state = useBootstrapState<T>(props.url)
+
+  return state.loading ? (
+    <Loader />
+  ) : state.error ? (
+    <Error />
+  ) : !state.data ? null : (
+    props.children(state.data)
+  )
 }
 
 export default Bootstrap
