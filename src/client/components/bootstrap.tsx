@@ -45,26 +45,26 @@ const useBootstrapState = <T extends {}>(url: string) => {
     })
   }
 
-  const fetchData = async () => {
-    setLoading()
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading()
 
-    try {
-      const response = await fetch(url)
+      try {
+        const response = await fetch(url)
 
-      if (response.ok) {
-        const data: T = await response.json()
-        setData(data)
-      } else {
+        if (response.ok) {
+          const data: T = await response.json()
+          setData(data)
+        } else {
+          setError()
+        }
+      } catch {
         setError()
       }
-    } catch {
-      setError()
     }
-  }
 
-  useEffect(() => {
     fetchData()
-  }, [])
+  }, [url])
 
   return state
 }
