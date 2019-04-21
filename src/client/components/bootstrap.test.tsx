@@ -29,7 +29,6 @@ describe("Bootstrap", () => {
 
   describe("when mounted", () => {
     beforeEach(() => {
-      // tslint:disable-next-line:no-empty
       const executor = () => {}
       MockFetch.mockReturnValue(new Promise(executor))
       renderResult = renderComponent()
