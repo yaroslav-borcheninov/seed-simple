@@ -2,7 +2,7 @@
 
 exports[`App should render 1`] = `
 <React.Fragment>
-  <ForwardRef>
+  <ForwardRef(styled.div)>
     <BrowserRouter>
       <Switch>
         <Redirect
@@ -25,7 +25,7 @@ exports[`App should render 1`] = `
         />
       </Switch>
     </BrowserRouter>
-  </ForwardRef>
+  </ForwardRef(styled.div)>
   <GlobalStyleComponent />
 </React.Fragment>
 `;
