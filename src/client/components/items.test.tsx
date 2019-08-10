@@ -1,6 +1,6 @@
 import React from "react"
 import { LinkProps } from "react-router-dom"
-import { render, RenderResult } from "react-testing-library"
+import { render, RenderResult } from "@testing-library/react"
 
 import Items from "./items"
 
