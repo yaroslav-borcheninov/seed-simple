@@ -11,7 +11,7 @@
     "prettier": "prettier --list-different '**/*.{ts,tsx,js,json}'",
     "jest": "jest",
     "jest:ci": "jest --coverageReporters=text-lcov | coveralls",
-    "test": "yarn prettier && yarn eslint && yarn jest${CI:+:ci}",
+    "test": "npm run prettier && npm run eslint && npm run jest${CI:+:ci}",
     "test:e2e": "testcafe"
   },
   "devDependencies": {
