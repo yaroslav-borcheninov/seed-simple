@@ -38,7 +38,7 @@
     "ts-jest": "^24.0.2",
     "ts-node-dev": "^1.0.0-pre.40",
     "typescript": "^3.5.3",
-    "typescript-styled-plugin": "^0.14.0",
+    "typescript-styled-plugin": "^0.15.0",
     "webpack": "^4.39.1",
     "webpack-cli": "^3.3.6",
     "webpack-dev-server": "^3.8.0"
