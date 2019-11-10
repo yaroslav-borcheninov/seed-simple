@@ -22,7 +22,7 @@ describe("Item", () => {
     const props = {
       match: { params: { id: "123" } },
     }
-    renderResult = render(<Item {...props as any} />)
+    renderResult = render(<Item {...(props as any)} />)
   })
 
   afterEach(() => {
