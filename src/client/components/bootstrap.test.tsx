@@ -11,7 +11,8 @@ describe("Bootstrap", () => {
     url: "/test/123",
     children: jest.fn(data => `Test: ${data}`),
   }
-  const renderComponent = () => render(<Bootstrap<string> {...props as any} />)
+  const renderComponent = () =>
+    render(<Bootstrap<string> {...(props as any)} />)
 
   let RealFetch: GlobalFetch["fetch"]
   let MockFetch: jest.Mock
